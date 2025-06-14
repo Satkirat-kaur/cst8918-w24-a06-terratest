@@ -1,6 +1,6 @@
 # Define the resource group
 resource "azurerm_resource_group" "rg" {
-  name     = "${var.labelPrefix}-A05-RG"
+  name     = "${var.labelPrefix}-a05rg"
   location = var.region
 }
 
@@ -72,7 +72,13 @@ resource "azurerm_network_interface" "webserver" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.webserver.id
   }
+ lifecycle {
+    prevent_destroy = false
+    create_before_destroy = false
+    ignore_changes = [ip_configuration]
+  }
 }
+
 
 # Link the security group to the NIC
 resource "azurerm_network_interface_security_group_association" "webserver" {
